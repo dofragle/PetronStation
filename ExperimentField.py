@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QComboBox, QVBoxLayout, QWidget, QHBoxLayout, QMessageBox, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QLabel, QPushButton, QComboBox, QVBoxLayout, QWidget, QHBoxLayout, QMessageBox, QSizePolicy
 from Experiment import Experiment
 class ExperimentField(QMainWindow):
     def __init__(self, name, experiment):
@@ -6,35 +6,48 @@ class ExperimentField(QMainWindow):
         self.setWindowTitle(name)
         self.width = 1200
         self.height = 1000
+        self.menuPanelX = 0
         self.experiment = experiment
+        self.curTime = [1, 0, 0]
+        self.dayOfWeek = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
+        self.labelDayOfWeek = QLabel(len(self.dayOfWeek) + 1)
+        self.labelForStatisticWindow = [
+            QLabel("Число обслуженных клиентов"),
+            QLabel("Число потерянных клиентов"),
+            QLabel("Общая прибыль"),
+            QLabel("Общие потери")
+        ]
+        self.buttonLabels = [
+            QLabel("Шаг моделирования"), 
+            QLabel("Статистика"), 
+            QLabel("Начать моделирование заново"), 
+            QLabel("Завершить эксперимент"), 
+            QLabel("Выход")
+        ]
+        self.simulationStep = ["10", "20", "30", "40", "50", "60"]
         self.brand_of_gasoline = experiment.brandOfGasoline
         self.brand_of_gasoline_by_one = experiment.brandOfGasolineByOne
-
+        self.statisticDialog = QDialog()
         self.setGeometry(100, 100, self.width, self.height)
+        self.simulationStepList = QComboBox()
+        self.simulationStepList.addItems(self.simulationStep)
+        self.simulationStepList.setCurrentIndex(0)
+        self.simulationStepList.currentIndexChanged.connect(self.onSimulationStepChanged)
 
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
+        self.centralWidget = QWidget()
+        self.setCentralWidget(self.centralWidget)
+        self.layout = QHBoxLayout(self.centralWidget)
 
-        self.layout = QHBoxLayout(self.central_widget)
-
-        self.menu_layout = QVBoxLayout()
-        self.menu_layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.addLayout(self.menu_layout)
-
-        self.simulation_step_list = QComboBox()
-        self.simulation_step_list.addItems(["10", "20", "30", "40", "50", "60"])
-        self.simulation_step_list.setCurrentIndex(0)
-        self.simulation_step_list.currentIndexChanged.connect(self.onSimulationStepChanged)
-        self.menu_layout.addWidget(self.simulation_step_list)
-
-        button_labels = ["Шаг моделирования", "Статистика", "Начать моделирование заново", "Завершить эксперимент",
-                         "Выход"]
+        self.menuLayout = QVBoxLayout()
+        self.menuLayout.setContentsMargins(0, 0, 0, 0)
+        self.layout.addLayout(self.menuLayout)
+        self.menuLayout.addWidget(self.simulationStepList)
         self.buttons = []
-        for label in button_labels:
+        for label in self.buttonLabels:
             button = QPushButton(label)
-            button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            button.setSizePolicy(QSizePolicy.expandingDirections)
             self.buttons.append(button)
-            self.menu_layout.addWidget(button)
+            self.menuLayout.addWidget(button)
             if label == "Статистика":
                 button.clicked.connect(self.onStatisticsClicked)
             elif label == "Завершить эксперимент":

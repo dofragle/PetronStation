@@ -5,17 +5,17 @@ class Application:
         self.dayOfWeek = dayOfWeek
         self.timeUntilTheEnd = totalTime
 
-    def get_time_until_the_end(self):
+    def getTimeUntilTheEnd(self):
         return self.timeUntilTheEnd
 
-    def set_time_until_the_end(self, timeUntilTheEnd):
+    def getTimeUntilTheEnd(self, timeUntilTheEnd):
         self.timeUntilTheEnd = timeUntilTheEnd
 
-    def get_volume_of_gasoline(self):
+    def getVolumeOfGasoline(self):
         return self.volumeOfGasoline
 
-    def get_day_of_week(self):
+    def getDayOfWeek(self):
         return self.dayOfWeek
 
-    def get_brand_of_gasoline(self):
+    def getBrandOfGasoline(self):
         return self.brandOfGasoline
